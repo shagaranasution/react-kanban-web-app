@@ -11,12 +11,16 @@ type Props = {
 function Column({ status }: Props) {
   const [text, setText] = useState('');
   const [open, setOpen] = useState(false);
+  const [drop, setDrop] = useState(false);
 
   const tasks = useStore(
     (store) => store.tasks.filter((task) => task.status === status),
     shallow
   );
   const addTask = useStore((store) => store.addTask);
+  const draggedTask = useStore((store) => store.draggedTask);
+  const setDraggedTask = useStore((store) => store.setDraggedTask);
+  const moveTask = useStore((store) => store.moveTask);
 
   function handleSubmit() {
     if (text.trim().length <= 3) {
@@ -31,12 +35,32 @@ function Column({ status }: Props) {
     setText(event.target.value);
   }
 
+  function handleDragOver(event: React.DragEvent<HTMLDivElement>) {
+    setDrop(true);
+    event.preventDefault();
+  }
+
+  function handleDragLeave(event: React.DragEvent<HTMLDivElement>) {
+    setDrop(false);
+    event.preventDefault();
+  }
+
+  function handleOnDrop() {
+    setDrop(false);
+    setDraggedTask(null);
+    moveTask(draggedTask ?? '', status);
+  }
+
   function toggleModal() {
     setOpen(!open);
   }
 
   return (
-    <div className="column">
+    <div
+      className={`column ${drop && 'drop'}`}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleOnDrop}>
       <div className="titleWrapper">
         <p>{status}</p>
         <button onClick={toggleModal}>Add</button>
