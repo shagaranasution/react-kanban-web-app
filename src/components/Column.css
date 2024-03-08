@@ -89,3 +89,11 @@
 .modalContent button:hover {
   background: var(--COLOR-GRAY-LIGHT);
 }
+
+.emptyPlaceholderText {
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  font-size: small;
+  transform: translateY(1rem);
+}

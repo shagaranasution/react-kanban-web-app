@@ -65,8 +65,13 @@ function Column({ status }: Props) {
         <p>{status}</p>
         <button onClick={toggleModal}>Add</button>
       </div>
-      {tasks.map((task) => (
-        <Task title={task.title} status={task.status} key={task.title} />
+      {tasks.length === 0 && <p className="emptyPlaceholderText">No items</p>}
+      {tasks.map((task, index) => (
+        <Task
+          title={task.title}
+          status={task.status}
+          key={task.title + index.toString()}
+        />
       ))}
       {open && (
         <div className="modal">
